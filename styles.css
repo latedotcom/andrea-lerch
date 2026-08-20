@@ -442,7 +442,8 @@ h2 {
 /* Ein Bildschirm Standzeit plus rund 1,4 Bildschirme pro Wechsel (acht Wechsel) */
 .reel {
   position: relative;
-  min-height: 1220svh;
+  /* Neun Werke: genug Weg pro Bild, damit man nichts ueberscrollt */
+  min-height: 1480svh;
 }
 
 .reel-sticky {
@@ -968,7 +969,8 @@ h2 {
   }
 
   .reel {
-    min-height: 1100svh;
+    /* Touch: deutlich mehr Scrollweg — Finger-Momentum soll kein Bild ueberspringen */
+    min-height: 1900svh;
   }
 
   .slide,

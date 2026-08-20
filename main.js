@@ -55,7 +55,13 @@
   /* Beide Bilder gleiten an: langsam los, langsam ein. Exponenten ueber 1
      sorgen dafuer, dass direkt nach der Standzeit kaum Weg zurueckgelegt wird
      — nichts rastet ein, nichts schiesst herein. */
-  const handoff = (d) => (d >= 0 ? Math.pow(d, 1.25) : -Math.pow(-d, 1.7));
+  /* Auf Touch-Geraeten laenger stehen und trager folgen — ein Finger-Flick
+     soll kein Bild ueberspringen. */
+  const isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+  const handoff = (d) =>
+    d >= 0
+      ? Math.pow(d, isTouch ? 1.45 : 1.25)
+      : -Math.pow(-d, isTouch ? 1.9 : 1.7);
 
   const MOVE = {
     // Bild wird zur Seite geschoben, das naechste kommt nach
@@ -77,8 +83,13 @@
     },
   };
 
-  const HOLD = 0.5; // Anteil eines Abschnitts, in dem das Bild ruhig stehen bleibt
+  const HOLD = isTouch ? 0.64 : 0.52; // Anteil ohne Bewegung — Touch braucht mehr Stand
   const TAIL = 0.94; // danach bleibt das letzte Bild noch stehen
+  const REEL_LERP = isTouch ? 0.045 : 0.075;
+  const FLOW_LERP = isTouch ? 0.05 : 0.085;
+  /* Pro Frame maximaler Indexsprung: verhindert, dass Momentum mehrere
+     Bilder ueberspringt, bevor die Animation sie gezeigt hat. */
+  const REEL_MAX_STEP = isTouch ? 0.022 : 0.045;
 
   const reel = document.querySelector("[data-reel]");
   const slides = [...document.querySelectorAll("[data-slide]")].map((el) => ({
@@ -286,10 +297,12 @@
       const target = Math.min(step + (f <= HOLD ? 0 : smoother((f - HOLD) / (1 - HOLD))), last);
 
       // traeger Nachlauf: das Bild folgt dem Rad, statt daran zu kleben
-      shown += (target - shown) * 0.075;
+      const toward = (target - shown) * REEL_LERP;
+      shown += Math.sign(toward) * Math.min(Math.abs(toward), REEL_MAX_STEP);
       if (Math.abs(target - shown) < 0.0006) shown = target;
 
-      flow += (t - flow) * 0.085;
+      const towardFlow = (t - flow) * FLOW_LERP;
+      flow += Math.sign(towardFlow) * Math.min(Math.abs(towardFlow), REEL_MAX_STEP * 1.2);
       if (Math.abs(t - flow) < 0.0006) flow = t;
 
       renderReel(shown, flow);
