@@ -281,6 +281,7 @@
     ["#panorama", "Panorama"],
     ["#ueber", "Über"],
     ["#kontakt", "Kontakt"],
+    ["#impressum", "Impressum"],
   ].map(([sel, label]) => ({ el: document.querySelector(sel), label }));
 
   let lastLabel = "";

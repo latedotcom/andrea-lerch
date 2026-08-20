@@ -73,7 +73,7 @@ Nach dem Upscaling liegt ein Master unter `images/_master/`. Solange dieser exis
 
 ## Anpassen
 
-- **E-Mail-Adresse**: `hello@andrealerch.art` in `index.html` (Kontakt und Footer-Bereich).
+- **E-Mail-Adressen**: Kontakt `andrea@andrealerch.de`, Impressum `andrea@mmaxgmbh.com` in `index.html`.
 - **Farben und Schriften**: CSS-Variablen am Anfang von `styles.css`.
 - **Richtung des Bildwechsels**: `data-move` am `<article>` — `push` (nach links),
   `pull` (nach rechts), `rise` (nach oben), `drop` (nach unten). Die Richtung eines Wechsels
